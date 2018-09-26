@@ -26,48 +26,38 @@ aqt.editor._html += """
 var columnCount = 1;
 singleColspan = columnCount;
 singleLine = [];
-
 function setColumnCount(n) {
     columnCount = n;
 }
-
 function setSingleLine(field) {
     singleLine.push(field);
 }
-
 var ffFix = false; // Frozen Fields fix
 function setFFFix(use) {
   ffFix = use;
 }
-
 // Event triggered when #fields is modified.
 function makeColumns(event) {
-
     // If the inserted object is not at the top level of the "fields" object,
     // ignore it. We're assuming that anything added to the "fields" table is
     // the entirety of the content of the table itself.
     if ($(event.target).parent()[0].id !== "fields") {
         return;
     }
-
     // In the original, there is a row for each field's name followed by a row
     // with that field's edit box. I.e.:
     // <tr><td>...Field name...</td></tr>
     // <tr><td>...Edit box...</td></tr>
     // We copy each row into its own group's array and then
     // write out the table again using our own ordering.
-
     singleLine = []
     pycmd("mceTrigger"); // Inject global variables for us to use from python.
 }
-
 // Because of the asynchronous nature of the bridge calls, we split this method
 // into two parts, the latter of which is called from python once the variable
 // injection has completed.
-
 function makeColumns2() {
     singleColspan = columnCount;
-
     // Hack to make Frozen Fields look right.
     if (ffFix) {
         // Apply fixed width to first <td>, which is a Frozen Fields cell,
@@ -99,7 +89,6 @@ function makeColumns2() {
         fEdit.push(rows[i+1]);
         i += 2;
     }
-
     txt = "";
     txt += "<tr>";
     // Pre-populate empty cells to influence column size
@@ -110,7 +99,6 @@ function makeColumns2() {
         txt += "<td></td>";
     }
     txt += "</tr>";
-
     for (var i = 0; i < fNames.length;) {
         // Lookahead for single-line fields
         target = columnCount;
@@ -153,7 +141,6 @@ function makeColumns2() {
     $("#fields").html("<table class='mceTable'>" + txt + "</table>");
     $('#fields').bind('DOMNodeInserted', makeColumns);
 }
-
 // Attach event to restructure the table after it is populated
 $('#fields').bind('DOMNodeInserted', makeColumns);
 </script>
@@ -199,7 +186,7 @@ def myEditorInit(self, mw, widget, parentWindow, addMode=False):
     hbox.addWidget(b)
     
     self.ccSpin.setMinimum(1)
-    self.ccSpin.setMaximum(getConfig(self,"MAX_COLUMNS")
+    self.ccSpin.setMaximum(getConfig(self,"MAX_COLUMNS"))
     self.ccSpin.valueChanged.connect(lambda value: onColumnCountChanged(self, value))
 
     # We will place the column count editor next to the tags widget.
