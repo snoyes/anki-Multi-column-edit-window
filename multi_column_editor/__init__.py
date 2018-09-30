@@ -15,9 +15,6 @@ import aqt.editor
 config= mw.addonManager.getConfig(__name__)
 if config is None:
     config=dict()
-def getConfig(self,key,defaultValue=None):
-    transferConfig(self)
-    return config.get(key,defaultValue)
 # Flag to enable hack to make Frozen Fields look normal
 ffFix = False
 
@@ -155,7 +152,7 @@ def getKeyForContext(self,field=None):
     note adder, or for different note types.
     """
     key = str(self.note.mid)
-    if getConfig(self,"same config for each window",False):
+    if not getConfig(self,"same config for each window",True):
         key=f"{self.parentWindow.__class__.__name__}-{key}"
     if field is not None:
         key=f"{key}{field}"
@@ -186,7 +183,7 @@ def myEditorInit(self, mw, widget, parentWindow, addMode=False):
     hbox.addWidget(b)
     
     self.ccSpin.setMinimum(1)
-    self.ccSpin.setMaximum(getConfig(self,"MAX_COLUMNS"))
+    self.ccSpin.setMaximum(getConfig(self,"MAX_COLUMNS", 18))
     self.ccSpin.valueChanged.connect(lambda value: onColumnCountChanged(self, value))
 
     # We will place the column count editor next to the tags widget.
@@ -255,13 +252,20 @@ Editor.onBridgeCmd = wrap(Editor.onBridgeCmd, myOnBridgeCmd, 'before')
 
 
 ###############################################
-#The code below should be eventually be deleted. It is used only to transfer the old configuration to the new one#
+#The code below should be eventually be deleted. It is used only to transfer the old configuration to the new one. Only the last def of getConfig should be kept#
 ###############################################
 CONF_KEY_COLUMN_COUNT = 'multi_column_count'
 def transferConfig(self):
-  if not config.get("transfer done",False):
     for key,value in mw.pm.profile.items():
         if CONF_KEY_COLUMN_COUNT in key:
             key=key.replace(f"{CONF_KEY_COLUMN_COUNT}-","")
             setConfig(self,key,value)
     setConfig(self,"transfer done",True)
+    
+def getConfig(self,key,defaultValue=None):
+    if not config.get("transfer done",False):
+        transferConfig(self)
+    global getConfig
+    def getConfig(self,key,defaultValue=None):
+        return config.get(key,defaultValue)
+    return getConfig(self,key,defaultValue)
