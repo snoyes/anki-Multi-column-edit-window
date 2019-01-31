@@ -1,14 +1,4 @@
-This is a repository for my small Anki add-ons. Larger add-ons will get their own repos.
-
-All code in this repository is licensed under GPLv3.
-
-Add-on list:
-- [Multi-Column Note Editor](#multi-column-note-editor)
-- [Strip Arabic/Hebrew Diacritics](#strip-arabic-diacritics)
-
----
-
-##Multi-Column Note Editor###
+# Multi colum note editor (new)
 [Link to add-on](https://ankiweb.net/shared/info/3491767031)
 
 ![Multi-column editor](https://raw.github.com/hssm/anki-addons/master/docs/multicolumn_browser.png)
@@ -18,10 +8,26 @@ Use multiple columns in the note editor. You can easily change the number of col
 If you have any fields that take up a lot of space, you can configure them to take up an entire row.
 ![Multi-column editor single row](https://raw.github.com/hssm/anki-addons/master/docs/multicolumn_browser_single_row.png)
 
+## Why a second add-on
 
-##Ignore accents in browser search###
-[Link to add-on](https://ankiweb.net/shared/info/1924690148)
+This is a great add-on by HSSM. For a few month, the author didn't
+debug their code. They didn't take pull request into account. Thus I
+update a new version, and I hope to keep this debugged. I'll delete
+this if HSSM comes back and takes correction into account.
 
-![Ignore accents](https://raw.github.com/hssm/anki-addons/master/docs/ar_diacritics.png "Ignore diacritics in browser search")
+## Configuration
+Using the add-on manager, you can change the setting of this
+add-on. 
 
-Ignore accents and diacritical marks used by various languages when searching in the card browser and match only against the base characters. This allows you to enter only the base characters in the browser search bar even if your notes have the words written with the marks included.
+### CSS
+The css used in anki's list of fields
+
+### MAX_COLUMNS
+The maximal number of columns
+
+### same config for each window
+By default, this add-on will save the number of columns for each note
+type in a particular window. For example, you may have 3 columns in
+the add window and 5 in the browser. If you prefer that the same
+number is used for every kind of windows, set this configuration to
+true
