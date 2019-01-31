@@ -1,6 +1,6 @@
 #whether debug may be turned on eventually. Less efficient
-mayDebug = True
-shouldDebug = True
+mayDebug = False
+shouldDebug = False
 indentation = 0
 import re
 from inspect import stack

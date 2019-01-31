@@ -1,5 +1,5 @@
 # Multi colum note editor (new)
-[Link to add-on](https://ankiweb.net/shared/info/3491767031)
+[Link to add-on](https://ankiweb.net/shared/info/2064123047)
 
 ![Multi-column editor](https://raw.github.com/hssm/anki-addons/master/docs/multicolumn_browser.png)
 
@@ -20,7 +20,7 @@ Using the add-on manager, you can change the setting of this
 add-on. 
 
 ### CSS
-The css used in anki's list of fields
+The css used in anki's list of fields. 
 
 ### MAX_COLUMNS
 The maximal number of columns
@@ -30,4 +30,14 @@ By default, this add-on will save the number of columns for each note
 type in a particular window. For example, you may have 3 columns in
 the add window and 5 in the browser. If you prefer that the same
 number is used for every kind of windows, set this configuration to
-true
+true.
+
+## Links, licence and credits
+
+Key         |Value
+------------|-------------------------------------------------------------------
+Copyright   | Arthur Milchior <arthur@milchior.fr>
+Based on    | Anki code by Damien Elmes <anki@ichi2.net>
+License     | GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
+Source in   | https://github.com/Arthur-Milchior/anki-template-card-type
+Addon number| [1159566613](https://ankiweb.net/shared/info/1159566613)
