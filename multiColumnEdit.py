@@ -25,30 +25,10 @@ with open(css_file,"r") as f:
 
 aqt.editor._html += f"""<style>{css}</style><script>{js}</script>"""
 
-def getKeyForContext(self,field=None):
-    """Get a key that takes into account the parent window type and
-    the note type.
-    
-    This allows us to have a different key for different contexts,
-    since we may want different column counts in the browser vs
-    note adder, or for different note types.
-    """
-    #We use mid and not model name because we want the configuration
-    #to remain if the model is renamed.
-    key = str(self.note.mid)
-    if not config.getConfig("same config for each window",True):
-        key=f"{self.parentWindow.__class__.__name__}-{key}"
-    if field is not None:
-        key=f"{key}{field}"
-    return key
-
-def setConfig(self,key,value):
-    config.setConfig(key,value)
-    self.loadNote()
-
 def onColumnCountChanged(self, count):
     "Save column count to settings and re-draw with new count."
-    setConfig(self,getKeyForContext(self),count)
+    config.setConfig("count", count, self.note.mid, self.parentWindow.__class__.__name__)
+    self.loadNote()
 
 def myEditorInit(self, mw, widget, parentWindow, addMode=False):
     self.ccSpin = QSpinBox(self.widget)
@@ -63,7 +43,7 @@ def myEditorInit(self, mw, widget, parentWindow, addMode=False):
     hbox.addWidget(label)
     hbox.addWidget(self.ccSpin)
     hbox.addWidget(b)
-    
+
     self.ccSpin.setMinimum(1)
     self.ccSpin.setMaximum(config.getConfig("MAX_COLUMNS", 18))
     self.ccSpin.valueChanged.connect(lambda value: onColumnCountChanged(self, value))
@@ -74,7 +54,7 @@ def myEditorInit(self, mw, widget, parentWindow, addMode=False):
     (rIdx, cIdx, r, c) = pLayout.getItemPosition(pLayout.indexOf(self.tags))
     # Place ours on the same row, to its right.
     pLayout.addLayout(hbox, rIdx, cIdx+1)
-        
+
     # If the user has the Frozen Fields add-on installed, tweak the
     # layout a bit to make it look right.
     global ffFix
@@ -91,14 +71,13 @@ def myOnBridgeCmd(self, cmd):
     them.
     """
     if cmd == "mceTrigger":
-        count = config.getConfig(getKeyForContext(self), 1)
+        count = config.getConfig("count", 1, self.note.mid, self.parentWindow.__class__.__name__)
         self.web.eval(f"setColumnCount({count});")
         self.ccSpin.blockSignals(True)
         self.ccSpin.setValue(count)
         self.ccSpin.blockSignals(False)
         for fld, val in self.note.items():
-            key=getKeyForContext(self,field=fld)
-            if config.getConfig(key, False):
+            if config.getConfig(fld, False, self.note.mid, self.parentWindow.__class__.__name__):
                 self.web.eval(f"setSingleLine('{fld}');")
         if ffFix:
             self.web.eval("setFFFix(true)")
@@ -107,28 +86,29 @@ def myOnBridgeCmd(self, cmd):
 
 def onConfigClick(self):
     m = QMenu(self.mw)
-    def addCheckableAction(menu, key, text):
-        a = menu.addAction(text)
+    def addCheckableAction(menu, isCheck, fld):
+        a = menu.addAction(fld)
         a.setCheckable(True)
-        a.setChecked(config.getConfig(key, False))
-        a.toggled.connect(lambda b, k=key: onCheck(self, k))
+        a.setChecked(isCheck)
+        a.toggled.connect(lambda b, f=fld: onCheck(self, f))
 
     # Descriptive title thing
     a = QAction(u"―Single Row―", m)
     a.setEnabled(False)
     m.addAction(a)
-    
+
     for fld, val in self.note.items():
-        key = getKeyForContext(self,field=fld)
-        addCheckableAction(m, key, fld)
+        isCheck = config.getConfig(fld, False, mid =  self.note.mid, windowName = self.parentWindow.__class__.__name__)
+        addCheckableAction(m, isCheck, fld)
 
     m.exec_(QCursor.pos())
 
 
-def onCheck(self, key):
-    setConfig(self,key,not config.getConfig(key))
+def onCheck(self, field):
+    current = config.getConfig(field, mid = self.note.mid, windowName = self.parentWindow.__class__.__name__)
+    config.setConfig(field, not current, mid = self.note.mid, windowName = self.parentWindow.__class__.__name__)
+    self.loadNote()
 
 
 Editor.__init__ = wrap(Editor.__init__, myEditorInit)
 Editor.onBridgeCmd = wrap(Editor.onBridgeCmd, myOnBridgeCmd, 'before')
-
