@@ -17,20 +17,11 @@ this if HSSM comes back and takes correction into account.
 
 ## Configuration
 Using the add-on manager, you can change the setting of this
-add-on. 
+add-on.
 
-### CSS
-The css used in anki's list of fields. 
-
-### MAX_COLUMNS
-The maximal number of columns
-
-### same config for each window
-By default, this add-on will save the number of columns for each note
-type in a particular window. For example, you may have 3 columns in
-the add window and 5 in the browser. If you prefer that the same
-number is used for every kind of windows, set this configuration to
-true.
+## Warning
+If you have downloaded Frozen Field add-on and disabled it, the result
+may be different from what you expect.
 
 ## Links, licence and credits
 

@@ -5,6 +5,7 @@
 
 from anki.hooks import wrap
 from aqt import *
+from aqt.addcards import AddCards
 from aqt.editor import Editor
 import aqt.editor
 from . import config
@@ -58,7 +59,7 @@ def myEditorInit(self, mw, widget, parentWindow, addMode=False):
     # If the user has the Frozen Fields add-on installed, tweak the
     # layout a bit to make it look right.
     global ffFix
-    if "516643804" in mw.addonManager.allAddons():
+    if config.getConfig("Frozen Fields number", "516643804") in mw.addonManager.allAddons() and isinstance(self.parentWindow, AddCards):
         ffFix = True
     else:
         pass
