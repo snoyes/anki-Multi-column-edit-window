@@ -58,10 +58,9 @@ def myEditorInit(self, mw, widget, parentWindow, addMode=False):
     # If the user has the Frozen Fields add-on installed, tweak the
     # layout a bit to make it look right.
     global ffFix
-    try:
-        __import__("Frozen Fields")
+    if "516643804" in mw.addonManager.allAddons():
         ffFix = True
-    except:
+    else:
         pass
 
 
