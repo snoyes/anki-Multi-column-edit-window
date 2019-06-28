@@ -11,6 +11,8 @@ from anki.hooks import runHook
 old_init = Editor.__init__
 
 def __init__(self, *args, **kwargs):
+    self.modelChanged = False
+    self.model = None
     old_init(self, *args, **kwargs)
 Editor.__init__ = __init__
 
@@ -52,31 +54,36 @@ Editor.setupNumberColum = setupNumberColum
 oldOnBridgeCmd = Editor.onBridgeCmd
 def onBridgeCmd(self, cmd):
     if cmd.startswith("toggleFroze"):
-        model = self.note.model()
         fieldNumber = cmd.split(":", 1)[1]
         fieldNumber = int(fieldNumber)
-        fieldObject = model['flds'][fieldNumber]
+        fieldObject = self.model['flds'][fieldNumber]
+        self.modelChanged = True
         fieldObject["sticky"] = not fieldObject.get("sticky", False)
-        self.mw.col.models.save(model)
         self.loadNote()
 
     elif cmd.startswith("toggleLineAlone"):
-        model = self.note.model()
         fieldNumber = cmd.split(":", 1)[1]
         fieldNumber = int(fieldNumber)
-        fieldObject = model['flds'][fieldNumber]
+        fieldObject = self.model['flds'][fieldNumber]
         fieldObject["Line alone"] = not fieldObject.get("Line alone", False)
-        self.mw.col.models.save(model)
+        self.modelChanged = True
         self.loadNote()
     else:
         oldOnBridgeCmd(self, cmd)
 Editor.onBridgeCmd = onBridgeCmd
 
 oldSetNote = Editor.setNote
-def setNote(self, *args, **kwargs):
-    oldSetNote(self, *args, **kwargs)
+def setNote(self,  note, hide=True, focusTo=None):
+    if note:
+        self.model = note.model()
+    else:
+        self.model = None
+    oldSetNote(self, note, hide=True, focusTo=None)
+    if self.modelChanged:
+        self.mw.col.models.save(self.model)
+    self.modelChanged = False
     if self.note:
-        self.ccSpin.setValue(self.note.model().get("number of columns", 1))
+        self.ccSpin.setValue(self.model.get("number of columns", 1))
 Editor.setNote = setNote
 
 def loadNote(self, focusTo=None):
@@ -92,7 +99,7 @@ def loadNote(self, focusTo=None):
         data = []
         for ord, (fld, val) in enumerate(self.note.items()):
             val = self.mw.col.media.escapeImages(val)
-            field = self.note.model()["flds"][ord]
+            field = self.model["flds"][ord]
             lineAlone = field.get("Line alone", False)
             sticky = field.get("sticky", False)
             data.append((fld, val, lineAlone, sticky))
@@ -110,7 +117,7 @@ def loadNote(self, focusTo=None):
 
         self.web.evalWithCallback("setFieldsMC(%s, %d, '%s', '%s'); setFonts(%s); focusField(%s); setNoteId(%s)" % (
             json.dumps(data),
-            self.note.model().get("number of columns", 1),
+            self.model.get("number of columns", 1),
             self.resourceToData(icon_path_frozen),
             self.resourceToData(icon_path_unfrozen),
             json.dumps(self.fonts()),
@@ -122,9 +129,8 @@ Editor.loadNote = loadNote
 
 def onColumnCountChanged(self, count):
         "Save column count to settings and re-draw with new count."
-        model = self.note.model()
-        model["number of columns"] = count
-        self.mw.col.models.save(model)
+        self.model["number of columns"] = count
+        self.modelChanged = True
         self.loadNote()
 Editor.onColumnCountChanged = onColumnCountChanged
 
