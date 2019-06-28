@@ -1,1 +1,2 @@
-zip -r mcne.zip *py zipping  *md user_files LICENSE *json --exclude \*~
+rm mcne.zip
+zip -r mcne.zip icons user_files *py zipping  *md user_files LICENSE *json --exclude \*~
