@@ -9,7 +9,7 @@ function toggleFroze(fieldNumber){
 }
 
 function createDiv(ord,  fieldContent, nbCol){
-	return "<td colspan={2}><div id=f{0}' onkeydown='onKey();' oninput='onInput();' onmouseup='onKey();  onfocus='onFocus(this);' onblur='onBlur();' class='field clearfix' ondragover='onDragOver(this);' onpaste='onPaste(this);' oncopy='onCutOrCopy(this);' oncut='onCutOrCopy(this);' contentEditable=true class=field>{1}</div></td>".format(ord, fieldContent, nbCol);
+	return "<td colspan={2}><div id='f{0}' onkeydown='onKey();' oninput='onInput();' onmouseup='onKey();'  onfocus='onFocus(this);' onblur='onBlur();' class='field clearfix' ondragover='onDragOver(this);' onpaste='onPaste(this);' oncopy='onCutOrCopy(this);' oncut='onCutOrCopy(this);' contentEditable=true class=field>{1}</div></td>".format(ord, fieldContent, nbCol);
 }
 
 function createNameTd(ord, fieldName, nbColThisField, nbColTotal, sticky, imgFrozen, imgUnfrozen){

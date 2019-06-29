@@ -73,7 +73,7 @@ def onBridgeCmd(self, cmd):
 Editor.onBridgeCmd = onBridgeCmd
 
 oldSetNote = Editor.setNote
-def setNote(self,  note, hide=True, focusTo=None):
+def setNote(self, note, hide=True, focusTo=None):
     if note:
         self.model = note.model()
     else:
