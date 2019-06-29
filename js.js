@@ -17,7 +17,7 @@ function createNameTd(ord, fieldName, nbColThisField, nbColTotal, sticky, imgFro
 	title =(sticky?"Unf":"F")+"reeze field "+fieldName;
 	txt = "<td class='fname' colspan={0}><span>{1}</span>".format(nbColThisField, fieldName);
 	if (nbColTotal>1){
-		txt+= "<input type='button' value='Change size' onClick='changeSize({0})'/>".format(ord);
+		txt+= "<input type='button' value='Change size' tabIndex='-1' onClick='changeSize({0})'/>".format(ord);
 	}
 	txt+="<img width='15px' height='15px' title='{0}' src='{1}' onClick='toggleFroze({2})'/></td>".format(title, img, ord);
 	//console.log("img is "+img);
