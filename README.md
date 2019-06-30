@@ -35,8 +35,8 @@ Key         |Value
 ------------|-------------------------------------------------------------------
 Maintener   | Arthur Milchior <arthur@milchior.fr>
 Based on    | Anki code by Damien Elmes <anki@ichi2.net>
-            | [Multi-column note editor](https://ankiweb.net/shared/info/3491767031) by HSSM and
-            | [Frozen fields](https://ankiweb.net/shared/info/516643804) by Tiago Barroso and Aristotelis P.
+Multi-column| [Multi-column note editor](https://ankiweb.net/shared/info/3491767031) by HSSM and
+Frozen field| [Frozen fields](https://ankiweb.net/shared/info/516643804) by Tiago Barroso and Aristotelis P.
 License     | GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 Source in   | https://github.com/Arthur-Milchior/anki-Multi-column-edit-window
 Addon number| [2064123047](https://ankiweb.net/shared/info/2064123047)
