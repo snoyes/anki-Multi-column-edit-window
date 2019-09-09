@@ -1,12 +1,13 @@
+import json
+import os
+
+from anki.hooks import runHook
 from anki.lang import _
 from aqt import editor
 from aqt.editor import *
 from aqt.editor import _html
 from aqt.qt import *
 from aqt.utils import shortcut
-import os
-import json
-from anki.hooks import runHook
 
 old_init = Editor.__init__
 
