@@ -69,7 +69,7 @@ def onBridgeCmd(self, cmd):
         self.modelChanged = True
         self.loadNote()
     else:
-        oldOnBridgeCmd(self, cmd)
+        return oldOnBridgeCmd(self, cmd)
 Editor.onBridgeCmd = onBridgeCmd
 
 oldSetNote = Editor.setNote
