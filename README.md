@@ -1,10 +1,10 @@
 # Advanced Note Editor
 ## Description
 This Anki add-on merges two add-ons:
-* [Multi-column note editor](https://ankiweb.net/shared/info/3491767031) by HSSM. This add-on does not seems to be debugged anymore
+* [Multi-column note editor](https://ankiweb.net/shared/info/3491767031) by HSSM. This add-on does not seems to be maintained anymore.
 * [Frozen fields](https://ankiweb.net/shared/info/516643804) by Tiago Barroso and Aristotelis P.
 
-Those add-ons seems to be incompatible, and creating a third add-on seems to be the easier way to have both properties.
+Those add-ons seems to be incompatible, and creating a third add-on seems to be the easiest way to have both features.
 
 ![Example](ex.png)
 
@@ -19,12 +19,12 @@ Note that the configuration is saved in the collection. Thus, the configuration 
 ### Frozen fields
 Anki supports '''sticky fields'''. A sticky field is a field whose value is not deleted when you switch to a different note. This can be very useful if you are making many notes in which a field either has the '''same value''' or changes very little.
 
-Unfortunaly, marking a field as sticky is quite complex and breaks your workflow. Frozen Fields allows you to conveniently mark a field as sticky (freeze) or not sticky (unfreeze) '''right from the note editor'''. It’s much more convenient than the default way.
+Unfortunately, marking a field as sticky is quite complex and breaks your workflow. Frozen Fields allows you to conveniently mark a field as sticky (freeze) or not sticky (unfreeze) '''right from the note editor'''. It's much more convenient than the default way.
 
 To freeze/unfreeze a field, just '''click the adjacent snowflake''' or use the corresponding '''hotkey''' (F9 by default). A blue snowflake means that the field is frozen and a grey snowflake means that the field is unfrozen.
 
 ## Warning
-If you install this add-on, uninstall the add-on Frozen Fields and Multi column note editor. The result otherwise would be unpredictable.
+If you install this add-on, uninstall the add-on Frozen Fields and Multi column note editor. The result otherwise could be unpredictable.
 
 ## TODO:
 More beautiful buttons.
