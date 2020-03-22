@@ -215,26 +215,26 @@ def myEditorInit(self, mw, widget, parentWindow, addMode=False):
         pass
 
 
-def myOnBridgeCmd(handled, cmd, self):
+def myOnBridgeCmd(handled, cmd, editor):
     """
     Called from JavaScript to inject some values before it needs
     them.
     """
-    if not isinstance(self, Editor):
+    if not isinstance(editor, Editor):
         return handled
     if cmd == "mceTrigger":
-        count = getConfig(self, getKeyForContext(self), defaultValue=1)
-        self.web.eval(f"setColumnCount({count});")
-        self.ccSpin.blockSignals(True)
-        self.ccSpin.setValue(count)
-        self.ccSpin.blockSignals(False)
-        for fld, val in self.note.items():
-            key = getKeyForContext(self, field=fld)
-            if getConfig(self, key, False):
-                self.web.eval(f"setSingleLine('{fld}');")
+        count = getConfig(editor, getKeyForContext(editor), defaultValue=1)
+        editor.web.eval(f"setColumnCount({count});")
+        editor.ccSpin.blockSignals(True)
+        editor.ccSpin.setValue(count)
+        editor.ccSpin.blockSignals(False)
+        for fld, val in editor.note.items():
+            key = getKeyForContext(editor, field=fld)
+            if getConfig(editor, key, False):
+                editor.web.eval(f"setSingleLine('{fld}');")
         if ffFix:
-            self.web.eval("setFFFix(true)")
-        self.web.eval("makeColumns2()")
+            editor.web.eval("setFFFix(true)")
+        editor.web.eval("makeColumns2()")
         return (True, None)
     return handled
 
