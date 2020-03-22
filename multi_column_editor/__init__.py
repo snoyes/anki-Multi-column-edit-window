@@ -5,7 +5,7 @@
 
 from anki.hooks import wrap
 from aqt import (QAction, QCursor, QHBoxLayout, QLabel, QMenu, QPushButton,
-                 QSpinBox, mw)
+                 QSpinBox, gui_hooks, mw)
 from aqt.editor import Editor
 
 # A sensible maximum number of columns we are able to set
@@ -215,11 +215,13 @@ def myEditorInit(self, mw, widget, parentWindow, addMode=False):
         pass
 
 
-def myOnBridgeCmd(self, cmd):
+def myOnBridgeCmd(handled, cmd, self):
     """
     Called from JavaScript to inject some values before it needs
     them.
     """
+    if not isinstance(self, Editor):
+        return handled
     if cmd == "mceTrigger":
         count = getConfig(self, getKeyForContext(self), defaultValue=1)
         self.web.eval(f"setColumnCount({count});")
@@ -233,6 +235,11 @@ def myOnBridgeCmd(self, cmd):
         if ffFix:
             self.web.eval("setFFFix(true)")
         self.web.eval("makeColumns2()")
+        return (True, None)
+    return handled
+
+
+gui_hooks.webview_did_receive_js_message.append(myOnBridgeCmd)
 
 
 def onConfigClick(self):
@@ -261,7 +268,6 @@ def onCheck(self, key):
 
 
 Editor.__init__ = wrap(Editor.__init__, myEditorInit)
-Editor.onBridgeCmd = wrap(Editor.onBridgeCmd, myOnBridgeCmd, 'before')
 
 
 ###############################################
