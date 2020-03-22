@@ -4,7 +4,8 @@
 # https://github.com/hssm/anki-addons
 
 from anki.hooks import wrap
-from aqt import *
+from aqt import (QAction, QCursor, QHBoxLayout, QLabel, QMenu, QPushButton,
+                 QSpinBox, mw)
 from aqt.editor import Editor
 
 # A sensible maximum number of columns we are able to set
