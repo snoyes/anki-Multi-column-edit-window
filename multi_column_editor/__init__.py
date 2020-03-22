@@ -222,21 +222,21 @@ def myOnBridgeCmd(handled, cmd, editor):
     """
     if not isinstance(editor, Editor):
         return handled
-    if cmd == "mceTrigger":
-        count = getConfig(editor, getKeyForContext(editor), defaultValue=1)
-        editor.web.eval(f"setColumnCount({count});")
-        editor.ccSpin.blockSignals(True)
-        editor.ccSpin.setValue(count)
-        editor.ccSpin.blockSignals(False)
-        for fld, val in editor.note.items():
-            key = getKeyForContext(editor, field=fld)
-            if getConfig(editor, key, False):
-                editor.web.eval(f"setSingleLine('{fld}');")
-        if ffFix:
-            editor.web.eval("setFFFix(true)")
-        editor.web.eval("makeColumns2()")
-        return (True, None)
-    return handled
+    if cmd != "mceTrigger":
+        return handled
+    count = getConfig(editor, getKeyForContext(editor), defaultValue=1)
+    editor.web.eval(f"setColumnCount({count});")
+    editor.ccSpin.blockSignals(True)
+    editor.ccSpin.setValue(count)
+    editor.ccSpin.blockSignals(False)
+    for fld, val in editor.note.items():
+        key = getKeyForContext(editor, field=fld)
+        if getConfig(editor, key, False):
+            editor.web.eval(f"setSingleLine('{fld}');")
+    if ffFix:
+        editor.web.eval("setFFFix(true)")
+    editor.web.eval("makeColumns2()")
+    return (True, None)
 
 
 gui_hooks.webview_did_receive_js_message.append(myOnBridgeCmd)
