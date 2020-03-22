@@ -18,7 +18,6 @@ if config is None:
 
 
 def getConfig(self, key, defaultValue=None):
-    transferConfig(self)
     return config.get(key, defaultValue)
 
 
@@ -268,18 +267,3 @@ def onCheck(self, key):
 
 
 Editor.__init__ = wrap(Editor.__init__, myEditorInit)
-
-
-###############################################
-#The code below should be eventually be deleted. It is used only to transfer the old configuration to the new one#
-###############################################
-CONF_KEY_COLUMN_COUNT = 'multi_column_count'
-
-
-def transferConfig(self):
-    if not config.get("transfer done", False):
-        for key, value in mw.pm.profile.items():
-            if CONF_KEY_COLUMN_COUNT in key:
-                key = key.replace(f"{CONF_KEY_COLUMN_COUNT}-", "")
-                setConfig(self, key, value)
-        setConfig(self, "transfer done", True)
