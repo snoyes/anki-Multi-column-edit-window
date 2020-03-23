@@ -43,10 +43,6 @@ function makeColumns2() {
         singleColspan = (columnCount*2)-1;
     }
 
-    s = '<style>';
-    s += '.mceTable { table-layout: fixed; height: 1%; width: 100%;}';
-    s += '.mceTable td .field { height: 100%; }';
-    s += '</style>';
     $('html > head').append(s);
 
     var fNames = [];

@@ -119,6 +119,7 @@ def on_webview_will_set_content(web_content: WebContent, context):
     if not isinstance(context, Editor):
         return
     web_content.js.append(f"/_addons/{addon_package}/web/editor.js")
+    web_content.js.append(f"/_addons/{addon_package}/web/editor.css")
     web_content.body += "<script>$('#fields').bind('DOMNodeInserted', makeColumns);</script>"
 
 
