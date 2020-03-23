@@ -9,44 +9,13 @@ from aqt import (QAction, QCursor, QHBoxLayout, QLabel, QMenu, QPushButton,
 from aqt.editor import Editor
 from aqt.webview import WebContent
 
+from .config import getConfig, getKeyForContext, setConfig
+
 addon_package = mw.addonManager.addonFromModule(__name__)
-# A sensible maximum number of columns we are able to set
-
-
-# Settings key to remember column count
-config = mw.addonManager.getConfig(__name__)
-if config is None:
-    config = dict()
-
-
-def getConfig(self, key, defaultValue=None):
-    return config.get(key, defaultValue)
 
 
 # Flag to enable hack to make Frozen Fields look normal
 ffFix = False
-
-def getKeyForContext(self, field=None):
-    """Get a key that takes into account the parent window type and
-    the note type.
-
-    This allows us to have a different key for different contexts,
-    since we may want different column counts in the browser vs
-    note adder, or for different note types.
-    """
-    key = str(self.note.mid)
-    if getConfig(self, "same config for each window", False):
-        key = f"{self.parentWindow.__class__.__name__}-{key}"
-    if field is not None:
-        key = f"{key}{field}"
-    return key
-
-
-def setConfig(self, key, value):
-    config[key] = value
-    mw.addonManager.writeConfig(__name__, config)
-    #print(f"Setting config[{key}] to {value}")
-    self.loadNote()
 
 
 def onColumnCountChanged(self, count):
@@ -144,11 +113,13 @@ def onCheck(self, key):
 
 Editor.__init__ = wrap(Editor.__init__, myEditorInit)
 mw.addonManager.setWebExports(__name__, r"web/.*(css|js)")
+
+
 def on_webview_will_set_content(web_content: WebContent, context):
     if not isinstance(context, Editor):
         return
     web_content.js.append(f"/_addons/{addon_package}/web/editor.js")
     web_content.body += "<script>$('#fields').bind('DOMNodeInserted', makeColumns);</script>"
 
-gui_hooks.webview_will_set_content.append(on_webview_will_set_content)
 
+gui_hooks.webview_will_set_content.append(on_webview_will_set_content)
