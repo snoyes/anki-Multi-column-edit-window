@@ -25,7 +25,7 @@ function setFields(fields) {
         if (singleLine.indexOf(n) >= 0) {
             txt += `
         <tr>
-            <td class=fname colspan=${columnCount}>${n}</td>
+            <td class=fname id="name${i}" colspan=${columnCount}>${n}</td>
         </tr>
         <tr>
             <td width=100% colspan=${columnCount}>
@@ -48,7 +48,7 @@ function setFields(fields) {
         } else {
             nb_fields_in_line +=1;
             titles_line += `
-            <td class=fname>${n}</td>`;
+            <td class=fname id="name${i}">${n}</td>`;
             fields_line += `
             <td width=100%>
                 <div id=f${i}
