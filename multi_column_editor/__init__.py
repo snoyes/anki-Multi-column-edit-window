@@ -3,6 +3,7 @@
 # See github page to report issues or to contribute:
 # https://github.com/hssm/anki-addons
 
+from anki.hooks import wrap
 from aqt import gui_hooks, mw
 from aqt.editor import Editor
 from aqt.webview import WebContent
@@ -13,15 +14,7 @@ from .gui import ffFix
 addon_package = mw.addonManager.addonFromModule(__name__)
 
 
-def myOnBridgeCmd(handled, cmd, editor):
-    """
-    Called from JavaScript to inject some values before it needs
-    them.
-    """
-    if not isinstance(editor, Editor):
-        return handled
-    if cmd != "mceTrigger":
-        return handled
+def myLoadNote(editor, focuseTo=None) -> None:
     count = getConfig(editor, getKeyForContext(editor), defaultValue=1)
     editor.web.eval(f"setColumnCount({count});")
     editor.ccSpin.blockSignals(True)
@@ -33,11 +26,8 @@ def myOnBridgeCmd(handled, cmd, editor):
             editor.web.eval(f"setSingleLine('{fld}');")
     if ffFix:
         editor.web.eval("setFFFix(true)")
-    editor.web.eval("makeColumns2()")
-    return (True, None)
 
-
-gui_hooks.webview_did_receive_js_message.append(myOnBridgeCmd)
+Editor.loadNote = wrap(Editor.loadNote, myLoadNote, "before")
 
 
 mw.addonManager.setWebExports(__name__, r"web/.*(css|js)")
@@ -47,8 +37,7 @@ def on_webview_will_set_content(web_content: WebContent, context):
     if not isinstance(context, Editor):
         return
     web_content.js.append(f"/_addons/{addon_package}/web/editor.js")
-    web_content.js.append(f"/_addons/{addon_package}/web/editor.css")
-    web_content.body += "<script>$('#fields').bind('DOMNodeInserted', makeColumns);</script>"
+    web_content.css.append(f"/_addons/{addon_package}/web/editor.css")
 
 
 gui_hooks.webview_will_set_content.append(on_webview_will_set_content)

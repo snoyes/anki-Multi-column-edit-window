@@ -11,105 +11,87 @@ var ffFix = false; // Frozen Fields fix
 function setFFFix(use) {
   ffFix = use;
 }
-// Event triggered when #fields is modified.
-function makeColumns(event) {
-    // If the inserted object is not at the top level of the "fields" object,
-    // ignore it. We're assuming that anything added to the "fields" table is
-    // the entirety of the content of the table itself.
-    if ($(event.target).parent()[0].id !== "fields") {
-        return;
-    }
-    // In the original, there is a row for each field's name followed by a row
-    // with that field's edit box. I.e.:
-    // <tr><td>...Field name...</td></tr>
-    // <tr><td>...Edit box...</td></tr>
-    // We copy each row into its own group's array and then
-    // write out the table again using our own ordering.
-    singleLine = []
-    pycmd("mceTrigger"); // Inject global variables for us to use from python.
-}
-// Because of the asynchronous nature of the bridge calls, we split this method
-// into two parts, the latter of which is called from python once the variable
-// injection has completed.
-function makeColumns2() {
-    singleColspan = columnCount;
-    // Hack to make Frozen Fields look right.
-    if (ffFix) {
-        // Apply fixed width to first <td>, which is a Frozen Fields cell,
-        // or it will take up too much space.
-        $("#fields td:first-child").each(function (){
-            $(this).attr("width", "28px");
-        });
-        singleColspan = (columnCount*2)-1;
-    }
-
-    $('html > head').append(s);
-
-    var fNames = [];
-    var fEdit = [];
-
-    // Create our two lists and tag those that need their own row.
-    var rows = $('#fields tr');
-    for(var i=0; i<rows.length;){
-        fldName = $('.fname', rows[i])[0].innerHTML;
-        if (singleLine.indexOf(fldName) >= 0) {
-            $(rows[i]).addClass("mceSingle");
-            $(rows[i+1]).addClass("mceSingle");
+function setFields(fields) {
+    var txt = "";
+    var titles_line = "";
+    var fields_line = "";
+    var nb_fields_in_line = 0;
+    for (var i = 0; i < fields.length; i++) {
+        var n = fields[i][0];
+        var f = fields[i][1];
+        if (!f) {
+            f = "<br>";
         }
-        fNames.push(rows[i]);
-        fEdit.push(rows[i+1]);
-        i += 2;
-    }
-    txt = "";
-    txt += "<tr>";
-    // Pre-populate empty cells to influence column size
-    for (var i = 0; i < columnCount; i++) {
-        if (ffFix) {
-            txt += "<td width=28px></td>";
-        }
-        txt += "<td></td>";
-    }
-    txt += "</tr>";
-    for (var i = 0; i < fNames.length;) {
-        // Lookahead for single-line fields
-        target = columnCount;
-        for (var j = 0; j < target && i+j < fNames.length; j++) {
-            nTd = fNames[i+j];
-            eTd = fEdit[i+j];
-
-            if ($(nTd).hasClass("mceSingle")) {
-                $('.fname', nTd).attr("colspan", singleColspan);
-                $('td[width^=100]', eTd).attr("colspan", singleColspan); // hacky selector. need a class
-                txt += "<tr class='mceRow mceNameRow'>" + nTd.innerHTML + "</tr>";
-                txt += "<tr class='mceRow mceEditRow'>" + eTd.innerHTML + "</tr>";
-                fNames[i+j] = "skipme";
-                fEdit[i+j] = "skipme";
-                target++;
+        if (singleLine.indexOf(n) >= 0) {
+            txt += `
+        <tr>
+            <td class=fname colspan=${columnCount}>${n}</td>
+        </tr>
+        <tr>
+            <td width=100% colspan=${columnCount}>
+                <div id=f${i}
+                     onkeydown='onKey(window.event);'
+                     oninput='onInput();'
+                     onmouseup='onKey(window.event);'
+                     onfocus='onFocus(this);'
+                     onblur='onBlur();'
+                     class='field clearfix'
+                     ondragover='onDragOver(this);'
+                     onpaste='onPaste(this);'
+                     oncopy='onCutOrCopy(this);'
+                     oncut='onCutOrCopy(this);'
+                     contentEditable=true
+                     class=field
+                >${f}</div>
+            </td>
+        </tr>`;
+        } else {
+            nb_fields_in_line +=1;
+            titles_line += `
+            <td class=fname>${n}</td>`;
+            fields_line += `
+            <td width=100%>
+                <div id=f${i}
+                     onkeydown='onKey(window.event);'
+                     oninput='onInput();'
+                     onmouseup='onKey(window.event);'
+                     onfocus='onFocus(this);'
+                     onblur='onBlur();'
+                     class='field clearfix'
+                     ondragover='onDragOver(this);'
+                     onpaste='onPaste(this);'
+                     oncopy='onCutOrCopy(this);'
+                     oncut='onCutOrCopy(this);'
+                     contentEditable=true
+                     class=field
+                >${f}</div>
+            </td>`;
+            if (nb_fields_in_line == columnCount) {
+                nb_fields_in_line = 0;
+                txt += `
+        <tr>
+${titles_line}
+        </tr>
+        <tr>
+${fields_line}
+        </tr>`;
+                titles_line = "";
+                fields_line = "";
             }
         }
-
-        nTxt = "<tr class='mceRow mceNameRow'>";
-        eTxt = "<tr class='mceRow mceEditRow'>";
-        target = columnCount;
-        for (var j = 0; j < target && i+j < fNames.length; j++) {
-            var nTd = fNames[i+j];
-            var eTd = fEdit[i+j];
-            if (nTd === "skipme") {
-                target++;
-                continue;
-            }
-            nTxt += nTd.innerHTML;
-            eTxt += eTd.innerHTML;
-        }
-        nTxt += "</tr>";
-        eTxt += "</tr>";
-        i += target;
-        txt += nTxt + eTxt;
     }
-
-    // Unbind then rebind to avoid infinite loop
-    $('#fields').unbind('DOMNodeInserted')
-    $("#fields").html("<table class='mceTable'>" + txt + "</table>");
-    $('#fields').bind('DOMNodeInserted', makeColumns);
+    if (nb_fields_in_line > 0) {
+        txt += `
+        <tr>
+${titles_line}
+        </tr>
+        <tr>
+${fields_line}
+        </tr>`;
+    }
+    $("#fields").html(`
+    <table class=mceTable cellpadding=0 width=100% style='table-layout: fixed;'>
+${txt}
+    </table>`);
+    maybeDisableButtons();
 }
-
