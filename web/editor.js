@@ -7,6 +7,9 @@ function setColumnCount(n) {
 function setSingleLine(field) {
     singleLine.push(field);
 }
+function resetSingleLine(field) {
+    singleLine = [];
+}
 function setFields(fields) {
     var txt = "";
     var titles_line = "";

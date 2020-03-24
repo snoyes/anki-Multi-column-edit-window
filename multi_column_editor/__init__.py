@@ -20,6 +20,7 @@ def myLoadNote(editor, focuseTo=None) -> None:
     editor.ccSpin.blockSignals(True)
     editor.ccSpin.setValue(count)
     editor.ccSpin.blockSignals(False)
+    editor.web.eval(f"resetSingleLine();")
     for fld, val in editor.note.items():
         key = getKeyForContext(editor, field=fld)
         if getConfig(editor, key, False):
