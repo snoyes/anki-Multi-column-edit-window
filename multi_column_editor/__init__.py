@@ -8,8 +8,8 @@ from aqt import gui_hooks, mw
 from aqt.editor import Editor
 from aqt.webview import WebContent
 
+from . import gui
 from .config import getConfig, getKeyForContext
-from .gui import ffFix
 
 addon_package = mw.addonManager.addonFromModule(__name__)
 
@@ -24,8 +24,7 @@ def myLoadNote(editor, focuseTo=None) -> None:
         key = getKeyForContext(editor, field=fld)
         if getConfig(editor, key, False):
             editor.web.eval(f"setSingleLine('{fld}');")
-    if ffFix:
-        editor.web.eval("setFFFix(true)")
+
 
 Editor.loadNote = wrap(Editor.loadNote, myLoadNote, "before")
 

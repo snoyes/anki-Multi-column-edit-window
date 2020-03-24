@@ -7,10 +7,6 @@ function setColumnCount(n) {
 function setSingleLine(field) {
     singleLine.push(field);
 }
-var ffFix = false; // Frozen Fields fix
-function setFFFix(use) {
-  ffFix = use;
-}
 function setFields(fields) {
     var txt = "";
     var titles_line = "";

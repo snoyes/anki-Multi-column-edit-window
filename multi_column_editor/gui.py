@@ -5,9 +5,6 @@ from aqt.editor import Editor
 
 from .config import getConfig, getKeyForContext, setConfig
 
-# Flag to enable hack to make Frozen Fields look normal
-ffFix = False
-
 
 def onColumnCountChanged(self, count):
     "Save column count to settings and re-draw with new count."
@@ -39,15 +36,6 @@ def myEditorInit(self, mw, widget, parentWindow, addMode=False):
     (rIdx, cIdx, r, c) = pLayout.getItemPosition(pLayout.indexOf(self.tags))
     # Place ours on the same row, to its right.
     pLayout.addLayout(hbox, rIdx, cIdx+1)
-
-    # If the user has the Frozen Fields add-on installed, tweak the
-    # layout a bit to make it look right.
-    global ffFix
-    try:
-        __import__("Frozen Fields")
-        ffFix = True
-    except:
-        pass
 
 
 Editor.__init__ = wrap(Editor.__init__, myEditorInit)
