@@ -43,9 +43,10 @@ Editor.__init__ = wrap(Editor.__init__, myEditorInit)
 def onConfigClick(self):
     m = QMenu(self.mw)
 
-    def addCheckableAction(menu, key, text):
+    def addCheckableAction(menu, text):
         a = menu.addAction(text)
         a.setCheckable(True)
+        key = getKeyForContext(self, field=fld)
         a.setChecked(getConfig(self, key, False))
         a.toggled.connect(lambda b, fld=text: switch(self, fld))
 
@@ -55,7 +56,6 @@ def onConfigClick(self):
     m.addAction(a)
 
     for fld, val in self.note.items():
-        key = getKeyForContext(self, field=fld)
-        addCheckableAction(m, key, fld)
+        addCheckableAction(m, fld)
 
     m.exec_(QCursor.pos())

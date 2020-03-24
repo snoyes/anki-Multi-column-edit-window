@@ -10,6 +10,9 @@ function setSingleLine(field) {
 function resetSingleLine(field) {
     singleLine = [];
 }
+function onMultipleLine(fld) {
+    pycmd("MCEW:" + fld);
+}
 function setFields(fields) {
     var txt = "";
     var titles_line = "";
@@ -24,7 +27,10 @@ function setFields(fields) {
         if (singleLine.indexOf(n) >= 0) {
             txt += `
         <tr>
-            <td class=fname id="name${i}" colspan=${columnCount}>${n}</td>
+            <td class=fname id="name${i}" colspan=${columnCount}>
+              <a onclick="onMultipleLine('${n}')">&raquo;-&laquo;</a>
+              ${n}
+            </td>
         </tr>
         <tr>
             <td width=100% colspan=${columnCount}>
@@ -47,7 +53,10 @@ function setFields(fields) {
         } else {
             nb_fields_in_line +=1;
             titles_line += `
-            <td class=fname id="name${i}">${n}</td>`;
+            <td class=fname id="name${i}">
+              <a onclick="onMultipleLine('${n}')">&laquo;-&raquo;</a>
+              ${n}
+            </td>`;
             fields_line += `
             <td width=100%>
                 <div id=f${i}

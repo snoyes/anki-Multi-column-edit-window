@@ -7,9 +7,8 @@ from anki.hooks import wrap
 from aqt import gui_hooks, mw
 from aqt.editor import Editor
 from aqt.webview import WebContent
-
 from . import gui
-from .config import getConfig, getKeyForContext
+from .config import getConfig, getKeyForContext, switch
 
 addon_package = mw.addonManager.addonFromModule(__name__)
 
@@ -41,3 +40,17 @@ def on_webview_will_set_content(web_content: WebContent, context):
 
 
 gui_hooks.webview_will_set_content.append(on_webview_will_set_content)
+
+def onBridge(handled, message, editor):
+    """Extends the js<->py bridge with our pycmd handler"""
+    if not isinstance(editor, Editor):
+        return handled
+    if not message.startswith("MCEW"):
+        return handled
+    if not editor.note:
+        return handled
+    fld = message[5:]
+    switch(editor, fld)
+    editor.loadNoteKeepingFocus()
+    return (True, None)
+gui_hooks.webview_did_receive_js_message.append(onBridge)
