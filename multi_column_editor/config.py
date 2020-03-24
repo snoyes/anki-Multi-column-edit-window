@@ -29,3 +29,7 @@ def setConfig(self, key, value):
     config[key] = value
     mw.addonManager.writeConfig(__name__, config)
     self.loadNote()
+
+def switch(editor, fld):
+    key = getKeyForContext(editor, field=fld)
+    setConfig(editor, key, not getConfig(editor, key))

@@ -3,8 +3,7 @@ from aqt import (QAction, QCursor, QHBoxLayout, QLabel, QMenu, QPushButton,
                  QSpinBox)
 from aqt.editor import Editor
 
-from .config import getConfig, getKeyForContext, setConfig
-
+from .config import getConfig, getKeyForContext, setConfig, switch
 
 def onColumnCountChanged(self, count):
     "Save column count to settings and re-draw with new count."
@@ -48,7 +47,7 @@ def onConfigClick(self):
         a = menu.addAction(text)
         a.setCheckable(True)
         a.setChecked(getConfig(self, key, False))
-        a.toggled.connect(lambda b, k=key: onCheck(self, k))
+        a.toggled.connect(lambda b, fld=text: switch(self, fld))
 
     # Descriptive title thing
     a = QAction(u"―Single Row―", m)
@@ -60,7 +59,3 @@ def onConfigClick(self):
         addCheckableAction(m, key, fld)
 
     m.exec_(QCursor.pos())
-
-
-def onCheck(self, key):
-    setConfig(self, key, not getConfig(self, key))
