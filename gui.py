@@ -2,6 +2,7 @@ from anki.hooks import wrap
 from aqt import (QAction, QCursor, QHBoxLayout, QLabel, QMenu, QPushButton,
                  QSpinBox)
 from aqt.editor import Editor
+from aqt import gui_hooks
 
 from .config import getConfig, getKeyForContext, setConfig, switch
 
@@ -10,7 +11,7 @@ def onColumnCountChanged(self, count):
     setConfig(self, getKeyForContext(self), count)
 
 
-def myEditorInit(self, mw, widget, parentWindow, addMode=False):
+def myEditorInit(self):
     self.ccSpin = QSpinBox(self.widget)
     b = QPushButton(u"▾")
     b.clicked.connect(lambda: onConfigClick(self))
@@ -37,8 +38,7 @@ def myEditorInit(self, mw, widget, parentWindow, addMode=False):
     pLayout.addLayout(hbox, rIdx, cIdx+1)
 
 
-Editor.__init__ = wrap(Editor.__init__, myEditorInit)
-
+gui_hooks.editor_did_init.append(myEditorInit)
 
 def onConfigClick(self):
     m = QMenu(self.mw)
