@@ -10,8 +10,8 @@ function setSingleLine(field) {
 function resetSingleLine(field) {
     singleLine = [];
 }
-function onMultipleLine(fld) {
-    pycmd("MCEW:" + fld);
+function onMultipleLine(ord) {
+    pycmd("MCEW:" + ord);
 }
 function setFields(fields) {
     var txt = "";
@@ -28,7 +28,7 @@ function setFields(fields) {
             txt += `
         <tr>
             <td class=fname id="name${i}" colspan=${columnCount}>
-              <a onclick="onMultipleLine('${n}')">&raquo;-&laquo;</a>
+              <a onclick="onMultipleLine('${i}')">&raquo;-&laquo;</a>
               ${n}
             </td>
         </tr>
@@ -54,7 +54,7 @@ function setFields(fields) {
             nb_fields_in_line +=1;
             titles_line += `
             <td class=fname id="name${i}">
-              <a onclick="onMultipleLine('${n}')">&laquo;-&raquo;</a>
+              <a onclick="onMultipleLine('${i}')">&laquo;-&raquo;</a>
               ${n}
             </td>`;
             fields_line += `

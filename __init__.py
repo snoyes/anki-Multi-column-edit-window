@@ -49,8 +49,8 @@ def onBridge(handled, message, editor):
         return handled
     if not editor.note:
         return handled
-    fld = message[len("MCEW:"):]
-    switch(editor, fld)
+    fld_ord = int(message[len("MCEW:"):])
+    switch(editor, fld_ord)
     editor.loadNoteKeepingFocus()
     return (True, None)
 gui_hooks.webview_did_receive_js_message.append(onBridge)
