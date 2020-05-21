@@ -49,7 +49,7 @@ def onBridge(handled, message, editor):
         return handled
     if not editor.note:
         return handled
-    fld = message[5:]
+    fld = message[len("MCEW:"):]
     switch(editor, fld)
     editor.loadNoteKeepingFocus()
     return (True, None)
