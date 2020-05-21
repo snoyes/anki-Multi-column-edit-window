@@ -4,7 +4,7 @@ from aqt import (QAction, QCursor, QHBoxLayout, QLabel, QMenu, QPushButton,
 from aqt.editor import Editor
 from aqt import gui_hooks
 
-from .config import getConfig, getKeyForContext, setConfig, switch
+from .config import getConfig, getKeyForContext, setConfig
 
 def onColumnCountChanged(self, count):
     "Save column count to settings and re-draw with new count."

@@ -8,7 +8,7 @@ from aqt import gui_hooks, mw
 from aqt.editor import Editor
 from aqt.webview import WebContent
 from . import gui
-from .config import getConfig, getKeyForContext, switch
+from .config import getConfig, getKeyForContext
 
 addon_package = mw.addonManager.addonFromModule(__name__)
 
