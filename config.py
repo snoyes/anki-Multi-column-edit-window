@@ -29,3 +29,9 @@ def setConfig(self, key, value):
     config[key] = value
     mw.addonManager.writeConfig(__name__, config)
     self.loadNote()
+
+def update(_):
+    global config
+    config = None
+
+mw.addonManager.setConfigUpdatedAction(__name__, update)
