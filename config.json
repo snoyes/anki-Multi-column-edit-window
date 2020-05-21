@@ -1,1 +1,4 @@
-{"MAX_COLUMNS": 18}
+{
+  "MAX_COLUMNS": 18,
+  "shortcut": "F10"
+}

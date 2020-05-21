@@ -25,6 +25,9 @@ def getKeyForContext(self, field=None):
     return key
 
 
+def shortcut():
+    return config.get("shortcut", "alt+f")
+
 def setConfig(self, key, value):
     config[key] = value
     mw.addonManager.writeConfig(__name__, config)

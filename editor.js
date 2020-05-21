@@ -28,7 +28,9 @@ function setFields(fields) {
             txt += `
         <tr>
             <td class=fname id="name${i}" colspan=${columnCount}>
-              <a onclick="onMultipleLine('${i}')">&raquo;-&laquo;</a>
+              <a onclick="onMultipleLine('${i}')" title="Smaller field (${shortcut_full_line})">
+                &raquo;-&laquo;
+              </a>
               ${n}
             </td>
         </tr>
@@ -54,7 +56,9 @@ function setFields(fields) {
             nb_fields_in_line +=1;
             titles_line += `
             <td class=fname id="name${i}">
-              <a onclick="onMultipleLine('${i}')">&laquo;-&raquo;</a>
+              <a onclick="onMultipleLine(${i})" title="Bigger field (${shortcut_full_line})">
+                &laquo;-&raquo;
+              </a>
               ${n}
             </td>`;
             fields_line += `

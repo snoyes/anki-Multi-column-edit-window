@@ -8,7 +8,7 @@ from aqt import gui_hooks, mw
 from aqt.editor import Editor
 from aqt.webview import WebContent
 from . import gui
-from .config import getConfig, getKeyForContext
+from .config import getConfig, getKeyForContext, shortcut
 
 addon_package = mw.addonManager.addonFromModule(__name__)
 
@@ -27,6 +27,7 @@ def myLoadNote(editor, focuseTo=None) -> None:
     editor.ccSpin.setValue(count)
     editor.ccSpin.blockSignals(False)
     editor.web.eval(f"resetSingleLine();")
+    editor.web.eval(f"""var shortcut_full_line = "{shortcut()}";""")
 
     for field in model["flds"]:
         single_line = field.get("single line")
@@ -73,3 +74,11 @@ def onBridge(handled, message, editor):
     editor.loadNoteKeepingFocus()
     return (True, None)
 gui_hooks.webview_did_receive_js_message.append(onBridge)
+
+
+def onSetupShortcuts(cuts, editor):
+    def onMultipleLine():
+        editor.web.eval(f"onMultipleLine({editor.currentField})")
+    pair = (shortcut(), onMultipleLine)
+    cuts.append(pair)
+gui_hooks.editor_did_init_shortcuts.append(onSetupShortcuts)
