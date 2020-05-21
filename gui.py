@@ -13,17 +13,11 @@ def onColumnCountChanged(self, count):
 
 def myEditorInit(self):
     self.ccSpin = QSpinBox(self.widget)
-    b = QPushButton(u"▾")
-    b.clicked.connect(lambda: onConfigClick(self))
-    b.setFixedHeight(self.tags.height())
-    b.setFixedWidth(25)
-    b.setAutoDefault(False)
     hbox = QHBoxLayout()
     hbox.setSpacing(0)
     label = QLabel("Columns:", self.widget)
     hbox.addWidget(label)
     hbox.addWidget(self.ccSpin)
-    hbox.addWidget(b)
 
     self.ccSpin.setMinimum(1)
     self.ccSpin.setMaximum(getConfig(self, "MAX_COLUMNS"))
@@ -39,23 +33,3 @@ def myEditorInit(self):
 
 
 gui_hooks.editor_did_init.append(myEditorInit)
-
-def onConfigClick(self):
-    m = QMenu(self.mw)
-
-    def addCheckableAction(menu, text):
-        a = menu.addAction(text)
-        a.setCheckable(True)
-        key = getKeyForContext(self, field=fld)
-        a.setChecked(getConfig(self, key, False))
-        a.toggled.connect(lambda b, fld=text: switch(self, fld))
-
-    # Descriptive title thing
-    a = QAction(u"―Single Row―", m)
-    a.setEnabled(False)
-    m.addAction(a)
-
-    for fld, val in self.note.items():
-        addCheckableAction(m, fld)
-
-    m.exec_(QCursor.pos())
