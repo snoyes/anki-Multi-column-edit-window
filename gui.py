@@ -8,7 +8,10 @@ from .config import getConfig, getKeyForContext, setConfig, switch
 
 def onColumnCountChanged(self, count):
     "Save column count to settings and re-draw with new count."
-    setConfig(self, getKeyForContext(self), count)
+    model = self.note.model()
+    model["nb column"] = count
+    self.mw.col.models.save(model, updateReqs=False)
+    self.loadNote()
 
 
 def myEditorInit(self):

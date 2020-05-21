@@ -14,17 +14,33 @@ addon_package = mw.addonManager.addonFromModule(__name__)
 
 
 def myLoadNote(editor, focuseTo=None) -> None:
-    count = getConfig(editor, getKeyForContext(editor), defaultValue=1)
+    model = editor.note.model()
+    count = model.get("nb column")
+    need_saving = False
+    if count is None:
+        # configuration may be saved in configuration file. Eventually delete this part of the code
+        count = getConfig(editor, getKeyForContext(editor), defaultValue=1)
+        model["nb column"] = count
+        need_saving = True
     editor.web.eval(f"setColumnCount({count});")
     editor.ccSpin.blockSignals(True)
     editor.ccSpin.setValue(count)
     editor.ccSpin.blockSignals(False)
     editor.web.eval(f"resetSingleLine();")
-    for fld_name, val in editor.note.items():
-        key = getKeyForContext(editor, field=fld_name)
-        if getConfig(editor, key, False):
-            editor.web.eval(f"setSingleLine('{fld_name}');")
 
+    for field in model["flds"]:
+        single_line = field.get("single line")
+        fld_name = field["name"]
+        if single_line is None:
+            # configuration may be saved in configuration file. Eventually delete this part of the code
+            key = getKeyForContext(editor, field=fld_name)
+            single_line = getConfig(editor, key, False)
+            field["single line"] = single_line
+            need_saving = True
+        if single_line:
+            editor.web.eval(f"setSingleLine('{fld_name}');")
+    if need_saving:
+        editor.mw.col.models.save(model, updateReqs=False)
 
 Editor.loadNote = wrap(Editor.loadNote, myLoadNote, "before")
 
@@ -50,7 +66,10 @@ def onBridge(handled, message, editor):
     if not editor.note:
         return handled
     fld_ord = int(message[len("MCEW:"):])
-    switch(editor, fld_ord)
+    model = editor.note.model()
+    field = model["flds"][fld_ord]
+    field["single line"] = not (field.get("single line", False))
+    editor.mw.col.models.save(model, updateReqs=False)
     editor.loadNoteKeepingFocus()
     return (True, None)
 gui_hooks.webview_did_receive_js_message.append(onBridge)
