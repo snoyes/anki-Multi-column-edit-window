@@ -20,10 +20,10 @@ def myLoadNote(editor, focuseTo=None) -> None:
     editor.ccSpin.setValue(count)
     editor.ccSpin.blockSignals(False)
     editor.web.eval(f"resetSingleLine();")
-    for fld, val in editor.note.items():
-        key = getKeyForContext(editor, field=fld)
+    for fld_name, val in editor.note.items():
+        key = getKeyForContext(editor, field=fld_name)
         if getConfig(editor, key, False):
-            editor.web.eval(f"setSingleLine('{fld}');")
+            editor.web.eval(f"setSingleLine('{fld_name}');")
 
 
 Editor.loadNote = wrap(Editor.loadNote, myLoadNote, "before")
