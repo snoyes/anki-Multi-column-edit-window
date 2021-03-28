@@ -1,4 +1,5 @@
-var columnCount = 1;
+/**Number of columns in the UI */
+var numberOfColumns = 1;
 
 /** 
 The indices of fields that takes a full line
@@ -6,7 +7,7 @@ The indices of fields that takes a full line
 fullLineFields = [];
 
 function setColumnCount(n) {
-    columnCount = n;
+    numberOfColumns = n;
 }
 function setFullLineFields(field) {
     fullLineFields.push(field);
@@ -31,7 +32,7 @@ function setFields(fields) {
         if (fullLineFields.indexOf(n) >= 0) {
             txt += `
         <tr>
-            <td class=fname id="name${i}" colspan=${columnCount}>
+            <td class=fname id="name${i}" colspan=${numberOfColumns}>
               <a onclick="onMultipleLine('${i}')" title="Smaller field (${shortcut_full_line})">
                 &raquo;-&laquo;
               </a>
@@ -39,7 +40,7 @@ function setFields(fields) {
             </td>
         </tr>
         <tr>
-            <td width=100% colspan=${columnCount}>
+            <td width=100% colspan=${numberOfColumns}>
                 <div id=f${i}
                      onkeydown='onKey(window.event);'
                      oninput='onInput();'
@@ -82,7 +83,7 @@ function setFields(fields) {
                      class=field
                 >${f}</div>
             </td>`;
-            if (nb_fields_in_line == columnCount) {
+            if (nb_fields_in_line == numberOfColumns) {
                 nb_fields_in_line = 0;
                 txt += `
         <tr>
