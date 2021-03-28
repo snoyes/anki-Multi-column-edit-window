@@ -1,14 +1,19 @@
 var columnCount = 1;
+
 singleColspan = columnCount;
-singleLine = [];
+/** 
+The indices of fields that takes a full line
+*/
+fullLineFields = [];
+
 function setColumnCount(n) {
     columnCount = n;
 }
-function setSingleLine(field) {
-    singleLine.push(field);
+function setFullLineFields(field) {
+    fullLineFields.push(field);
 }
-function resetSingleLine(field) {
-    singleLine = [];
+function resetFullLineFields(field) {
+    fullLineFields = [];
 }
 function onMultipleLine(ord) {
     pycmd("MCEW:" + ord);
@@ -24,7 +29,7 @@ function setFields(fields) {
         if (!f) {
             f = "<br>";
         }
-        if (singleLine.indexOf(n) >= 0) {
+        if (fullLineFields.indexOf(n) >= 0) {
             txt += `
         <tr>
             <td class=fname id="name${i}" colspan=${columnCount}>
