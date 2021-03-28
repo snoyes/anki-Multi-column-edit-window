@@ -1,6 +1,5 @@
 var columnCount = 1;
 
-singleColspan = columnCount;
 /** 
 The indices of fields that takes a full line
 */
