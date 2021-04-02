@@ -27,7 +27,7 @@ def myLoadNote(editor, focuseTo=None) -> None:
     editor.ccSpin.setValue(count)
     editor.ccSpin.blockSignals(False)
     editor.web.eval(f"resetFullLineFields();")
-    editor.web.eval(f"""var shortcut_full_line = "{shortcut()}";""")
+    editor.web.eval(f"""const shortcut_full_line = "{shortcut()}";""")
 
     for field in model["flds"]:
         single_line = field.get("single line")
@@ -39,6 +39,7 @@ def myLoadNote(editor, focuseTo=None) -> None:
             field["single line"] = single_line
             need_saving = True
         if single_line:
+            pass
             editor.web.eval(f"setFullLineFields('{fld_name}');")
     if need_saving:
         editor.mw.col.models.save(model, updateReqs=False)
