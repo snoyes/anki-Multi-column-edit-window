@@ -1,7 +1,7 @@
 
 /**Number of columns in the UI */
 var numberOfColumns = 1;
-
+var shortcut_full_line;
 /** 
 The indices of fields that takes a full line
 */
