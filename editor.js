@@ -95,8 +95,10 @@ function forEditorField(
     values,
     func
 ) {
-    for (let [ord, fieldElement] of fieldsElements) {
-        func(fieldElement, values[ord], ord);
+    for (let ord = 0; ord < values.length; ord++) {
+        const fieldElement = fieldsElements.get(ord);
+        const value = values[ord];
+        func(fieldElement, value, ord);
     }
 }
 
