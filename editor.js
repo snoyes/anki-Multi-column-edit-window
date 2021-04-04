@@ -147,7 +147,7 @@ function setFields(fields) {
             const title_start = (is_long) ? "Smaller" : "Bigger";
             const id = `MCEW_${ord}`;
             const link = document.getElementById(id);
-            // link.title = `${title_start} field (${shortcut_full_line})`;
+            link.title = `${title_start} field (${shortcut_full_line})`;
             link.textContent = (is_long) ? "»-«" : "«-»" ;
             field.initialize(fieldName, color, fieldContent);
         }
