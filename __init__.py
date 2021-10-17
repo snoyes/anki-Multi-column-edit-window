@@ -14,7 +14,7 @@ addon_package = mw.addonManager.addonFromModule(__name__)
 
 
 def myLoadNote(editor, focuseTo=None) -> None:
-    model = editor.note.model()
+    model = editor.note.note_type()
     count = model.get("nb column")
     need_saving = False
     if count is None:
@@ -68,7 +68,7 @@ def onBridge(handled, message, editor):
     if not editor.note:
         return handled
     fld_ord = int(message[len("MCEW:"):])
-    model = editor.note.model()
+    model = editor.note.note_type()
     field = model["flds"][fld_ord]
     field["single line"] = not (field.get("single line", False))
     editor.mw.col.models.save(model, updateReqs=False)
