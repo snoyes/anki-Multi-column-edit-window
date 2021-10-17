@@ -110,28 +110,6 @@ function getEditorField(n) {
     }
 }
 
-// Literal copies
-// editor/toolbar.ts
-
-const highlightButtons = ["bold", "italic", "underline", "superscript", "subscript"];
-
-function clearButtonHighlight() {
-    for (const name of highlightButtons) {
-        const elem = document.querySelector(`#${name}`);
-        elem.classList.remove("highlighted");
-    }
-}
-
-function disableButtons() {
-    const buttons = document.querySelectorAll(
-        "button.linkb:not(.perm)"
-    );
-    buttons.forEach((elem) => {
-        elem.disabled = true;
-    });
-    clearButtonHighlight();
-}
-
 function setFields(fields) {
     // webengine will include the variable after enter+backspace
     // if we don't convert it to a literal colour
@@ -152,13 +130,10 @@ function setFields(fields) {
             field.initialize(fieldName, color, fieldContent);
         }
     );
-    
-
-    if (!getCurrentField()) {
-        // when initial focus of the window is not on editor (e.g. browser)
-        disableButtons();
-    }
 }
+
+// Literal copies
+// editor/toolbar.ts
 
 function setBackgrounds(cols) {
     forEditorField(cols, (field, value, ord) =>
@@ -169,7 +144,7 @@ function setBackgrounds(cols) {
     if (dupes == null) {
         return;
     }
-    dupes.classList.toggle("is-inactive", !cols.includes("dupe"));
+    dupes.classList.toggle("d-none", !cols.includes("dupe"));
 }
 
 function setFonts(fonts) {
@@ -183,19 +158,9 @@ function focusField(n) {
     const field = getEditorField(n);
 
     if (field) {
-        field.editingArea.focusEditable();
-        caretToEnd(field.editingArea);
-        updateButtonState();
+        field.editingArea.focus();
+        field.editingArea.caretToEnd();
     }
-}
-
-function caretToEnd(currentField) {
-    const range = document.createRange();
-    range.selectNodeContents(currentField.editable);
-    range.collapse(false);
-    const selection = currentField.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
 }
 
 function updateButtonState() {
