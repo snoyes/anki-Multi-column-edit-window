@@ -58,22 +58,22 @@ def on_webview_will_set_content(web_content: WebContent, context):
 
 gui_hooks.webview_will_set_content.append(on_webview_will_set_content)
 
-def onBridge(handled, message, editor):
+def onBridgeLine(handled, message, editor):
     """Extends the js<->py bridge with our pycmd handler"""
     if not isinstance(editor, Editor):
         return handled
-    if not message.startswith("MCEW"):
+    if not message.startswith("MCEW_line"):
         return handled
     if not editor.note:
         return handled
-    fld_ord = int(message[len("MCEW:"):])
+    fld_ord = int(message[len("MCEW_line:"):])
     model = editor.note.note_type()
     field = model["flds"][fld_ord]
     field["single line"] = not (field.get("single line", False))
     editor.mw.col.models.save(model, updateReqs=False)
     editor.loadNoteKeepingFocus()
     return (True, None)
-gui_hooks.webview_did_receive_js_message.append(onBridge)
+gui_hooks.webview_did_receive_js_message.append(onBridgeLine)
 
 
 def onSetupShortcuts(cuts, editor):

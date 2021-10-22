@@ -18,7 +18,7 @@ function resetFullLineFields(field) {
     fullLineFields = [];
 }
 function onMultipleLine(ord) {
-    const msg = "MCEW:" + ord;
+    const msg = "MCEW_line:" + ord;
     pycmd(msg);
 }
 
