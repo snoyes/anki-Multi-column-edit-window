@@ -6,7 +6,9 @@ var shortcut_full_line;
 The indices of fields that takes a full line
 */
 var fullLineFields = [];
+var stickyFields = [];
 const fieldsElements = new Map();
+let pin_src;
 
 function setColumnCount(n) {
     numberOfColumns = n;
@@ -17,14 +19,36 @@ function setFullLineFields(field) {
 function resetFullLineFields(field) {
     fullLineFields = [];
 }
+function setStickyFields(field) {
+    stickyFields.push(field);
+}
+function setSticky() {
+    // allow to cancel the default setSticky
+}
+    stickyFields = [];
+function resetStickyFields(field) {
+}
 function onMultipleLine(ord) {
-    const msg = "MCEW_line:" + ord;
-    pycmd(msg);
+    pycmd(`MCEW_line:${ord}`);
+}
+function onSticky(ord, name) {
+    const index = stickyFields.findIndex((arg) => arg == name);
+    const was_sticky = index >= 0;
+    if (was_sticky) {
+        stickyFields.splice(index, 1);
+    } else {
+        stickyFields.push(name);
+    }
+    document.getElementById(`sticky_{ord}`).classList.toggle("is-inactive", was_sticky);
+    pycmd(`MCEW_sticky:${ord}`);
 }
 
 
 function longField(fieldName) {
     return fullLineFields.indexOf(fieldName) >= 0;
+}
+function stickyField(fieldName) {
+    return stickyFields.indexOf(fieldName) >= 0;
 }
 
 function adjustFieldAmount(fields) {
@@ -43,8 +67,9 @@ function adjustFieldAmount(fields) {
     fieldsContainer.appendChild(table);
     let current_line = document.createElement("tr");
     for (var ord = 0; ord < amount; ord++) {
-        var fieldName = fields[ord][0];
+        const fieldName = fields[ord][0];
         let field_ord, title;
+        const is_sticky = stickyField(fieldName);
         if (fieldsElements.has(ord)) {
             field_ord = fieldsElements.get(ord);
         } else {
@@ -62,6 +87,13 @@ function adjustFieldAmount(fields) {
             labelContainer.appendChild(document.createTextNode(" "))
             labelContainer.appendChild(link)
             fieldsElements.set(ord, field_ord);
+
+            const sticky = document.createElement("img");
+            sticky.id = `sticky_{ord}` ;
+            sticky.src = pin_src;
+            labelContainer.appendChild(sticky);
+            sticky.onclick = () => onSticky(ord_copy, fieldName);
+            sticky.classList.toggle("is-inactive", !is_sticky);
         }
         const td = document.createElement("td");
         td.appendChild(field_ord)
@@ -82,7 +114,7 @@ function adjustFieldAmount(fields) {
                 table.appendChild(current_line);
                 current_line = document.createElement("tr")
             }
-        }        
+        }
     }
     if (current_line.childElementCount > 0) {
         table.appendChild(current_line);

@@ -26,12 +26,16 @@ def myLoadNote(editor, focuseTo=None) -> None:
     editor.ccSpin.blockSignals(True)
     editor.ccSpin.setValue(count)
     editor.ccSpin.blockSignals(False)
+    editor.web.eval(f"""pin_src = "/_addons/{addon_package}/pin-angle.svg";""")
     editor.web.eval(f"resetFullLineFields();")
+    editor.web.eval(f"resetStickyFields();")
     editor.web.eval(f"""shortcut_full_line = "{shortcut()}";""")
 
     for field in model["flds"]:
         single_line = field.get("single line")
         fld_name = field["name"]
+        if field["sticky"]:
+            editor.web.eval(f"setStickyFields('{fld_name}');")
         if single_line is None:
             # configuration may be saved in configuration file. Eventually delete this part of the code
             key = getKeyForContext(editor, field=fld_name)
@@ -46,7 +50,7 @@ def myLoadNote(editor, focuseTo=None) -> None:
 Editor.loadNote = wrap(Editor.loadNote, myLoadNote, "before")
 
 
-mw.addonManager.setWebExports(__name__, r".*(css|js)")
+mw.addonManager.setWebExports(__name__, r".*(css|js|svg)")
 
 
 def on_webview_will_set_content(web_content: WebContent, context):
@@ -57,6 +61,22 @@ def on_webview_will_set_content(web_content: WebContent, context):
 
 
 gui_hooks.webview_will_set_content.append(on_webview_will_set_content)
+
+def onBridgeFroze(handled, message, editor):
+    """Extends the js<->py bridge with our pycmd handler"""
+    if not isinstance(editor, Editor):
+        return handled
+    if not message.startswith("MCEW_sticky"):
+        return handled
+    if not editor.note:
+        return handled
+    fld_ord = int(message[len("MCEW_sticky:"):])
+    model = editor.note.note_type()
+    field = model["flds"][fld_ord]
+    field["sticky"] = not (field.get("sticky", False))
+    editor.mw.col.models.save(model, updateReqs=False)
+    return (True, None)
+gui_hooks.webview_did_receive_js_message.append(onBridgeFroze)
 
 def onBridgeLine(handled, message, editor):
     """Extends the js<->py bridge with our pycmd handler"""

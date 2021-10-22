@@ -1,2 +1,7 @@
 .mceTable { table-layout: fixed; height: 1%; width: 100%;}
 .mceTable td { height: 100%; }
+
+
+.is-inactive {
+  opacity: .2;
+}
