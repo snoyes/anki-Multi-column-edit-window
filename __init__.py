@@ -39,7 +39,6 @@ def myLoadNote(editor, focuseTo=None) -> None:
             field["single line"] = single_line
             need_saving = True
         if single_line:
-            pass
             editor.web.eval(f"setFullLineFields('{fld_name}');")
     if need_saving:
         editor.mw.col.models.save(model, updateReqs=False)
